@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if request %}
+    <h2>{{ request }}</h2>
+    <br/>Количество вхождений: {{ result[1] }}<br/><br/>
+        {% for res in result[0] %}
+            <div>
+                {{ res[0] }}<br/>
+            </div>
+            <div >
+                {{ res[1] }}<br/>
+            </div>
+            <div>
+                Источник: {{ res[2][0][1] }} ({{ res[2][0][0] }})<br/><br/>
+            </div>
+        {% endfor %}
+{% endif %}
+
+{% endblock %}

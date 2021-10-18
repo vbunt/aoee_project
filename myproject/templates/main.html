@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br/>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        Введите запрос<br>
+    </p>
+    <p class="fw-light">запрос - чтобы получить все вхождения слова в любой его форме
+        <br/>"запрос" - чтобы получить все вхождения слова в заданной форме
+        <br/>POS - чтобы получить все вхождения конкретной части речи
+        <br/>запрос+POS - чтобы получить все вхождения слова заданной части речи в любой его форме
+        <br/>"запрос"+POS - чтобы получить все вхождения слова заданной части речи в заданной форме
+        <br/></p>
+    {{ form.request.label(class="form-label form-control-lg") }}
+    {{ form.request(class="form-control form-control-lg") }}
+    {{ form.submit(class="btn btn dark") }}
+</form>
+
+{% endblock %}
