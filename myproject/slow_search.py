@@ -85,7 +85,7 @@ text_sql = ('''
 
 def one_item(item):
     if '"' in item:
-        exact_form = re.search('[а-яА-ЯёЁ]+', item)[0]
+        exact_form = re.search('[а-яА-ЯёЁ]+', item)[0].lower()
         cur.execute(exact_form_sql, [exact_form])
         data = cur.fetchall()
 
@@ -94,7 +94,7 @@ def one_item(item):
         data = cur.fetchall()
 
     elif '+' in item:
-        word = re.search('[а-яА-ЯёЁ]+', item)[0]
+        word = re.search('[а-яА-ЯёЁ]+', item)[0].lower()
         pos = re.search('[A-Z]+', item)[0]
         doc = Doc(word)
         doc.segment(segmenter)
@@ -120,7 +120,7 @@ def one_item(item):
 
 def one_more_item(item, token_id, sentence_id):
     if '"' in item:
-        exact_form = re.search('[а-яА-ЯёЁ]+', item)[0]
+        exact_form = re.search('[а-яА-ЯёЁ]+', item)[0].lower()
         cur.execute(om_exact_form_sql, [exact_form, (token_id + 1), sentence_id])
         data = cur.fetchall()
 
@@ -129,7 +129,7 @@ def one_more_item(item, token_id, sentence_id):
         data = cur.fetchall()
 
     elif '+' in item:
-        word = re.search('[а-яА-ЯёЁ]+', item)[0]
+        word = re.search('[а-яА-ЯёЁ]+', item)[0].lower()
         pos = re.search('[A-Z]+', item)[0]
         doc = Doc(word)
         doc.segment(segmenter)
@@ -159,7 +159,9 @@ def searcher(request_items):
         for entry in one_item(request_items[0]):
             cur.execute(text_sql, [entry[2]])
             source = cur.fetchall()
-            new = (entry[0], entry[2], source)
+            url = source[0][0]
+            title = source[0][1]
+            new = (entry[0], entry[2], title, url)
             issue.append(new)
 
     elif len(request_items) == 2:
@@ -172,7 +174,9 @@ def searcher(request_items):
             if len(good_entry) != 0:
                 cur.execute(text_sql, [good_entry[0][2]])
                 source = cur.fetchall()
-                new = (entry[0] + ' ' + good_entry[0][0], good_entry[0][2], source)
+                url = source[0][0]
+                title = source[0][1]
+                new = (entry[0] + ' ' + good_entry[0][0], good_entry[0][2], title, url)
                 issue.append(new)
 
     else:
@@ -191,6 +195,8 @@ def searcher(request_items):
                     if len(good_entry) != 0:
                         cur.execute(text_sql, [good_entry[0][2]])
                         source = cur.fetchall()
-                        new = (entry[0] + ' ' + ag_entry[0][0] + ' ' + good_entry[0][0], good_entry[0][2], source)
+                        url = source[0][0]
+                        title = source[0][1]
+                        new = (entry[0] + ' ' + ag_entry[0][0] + ' ' + good_entry[0][0], good_entry[0][2], title, url)
                         issue.append(new)
     return issue, len(issue)
