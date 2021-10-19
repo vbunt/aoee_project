@@ -4,7 +4,6 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from math import ceil
 import slow_search
-import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'avadakedavra'
@@ -24,7 +23,7 @@ def index():
     form = RequestForm()
     if form.validate_on_submit():
         req = form.request.data
-        request_items = re.split(' ', req)
+        request_items = req.split()
         result = slow_search.searcher(request_items)
         n_pages = ceil(result[1] / 20)
         ind = 0
