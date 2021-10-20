@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -14,6 +14,7 @@ n_pages = 0
 result = []
 req = ''
 l = 0
+p = ''
 conn = sqlite3.connect('Harry_Potter80_filled.db', check_same_thread=False)
 
 class RequestForm(FlaskForm):
@@ -21,11 +22,17 @@ class RequestForm(FlaskForm):
     submit = SubmitField('Найти!')
 
 
+class PageForm(FlaskForm):
+    request_p = StringField('', validators=[DataRequired()])
+    submit_p = SubmitField('Перейти к странице')
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global form, result, n_pages, req, l
+    global form, result, n_pages, req, l, p
     form = RequestForm()
     cur = conn.cursor()
+    p = PageForm()
     if form.validate_on_submit():
         req = form.request.data
         request_items = req.split()
@@ -36,17 +43,25 @@ def index():
         n_pages = ceil(l / 20)
         ind = 0
         form.request.data = ''
-        return render_template('result.html', req=req, form=form, result=result, n_pages=n_pages, ind=ind, l=l)
+        return redirect('/result')
     else:
         req = None
         result = []
         return render_template('main.html', req=req, form=form, result=result)
 
 
-@app.route('/result')
+@app.route('/result', methods=['GET', 'POST'])
 def pages():
-    page_no = request.args.get('page')
-    return render_template('result.html', req=req, form=form, result=result, n_pages=n_pages, ind=int(page_no)-1, l=l)
+    global p
+    p = PageForm()
+    if p.validate_on_submit():
+        page_no = int(p.request_p.data)
+        p.request_p.data = ''
+    elif request.args.get('page'):
+        page_no = request.args.get('page')
+    else:
+        page_no = 1
+    return render_template('result.html', req=req, p=p, result=result, n_pages=n_pages, ind=int(page_no)-1, l=l)
 
 
 @app.errorhandler(404)
