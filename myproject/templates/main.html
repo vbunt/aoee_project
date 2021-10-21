@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body background="static/images/bg.png"><br/>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="shadow-sm p-3 mb-4 bg-body rounded">
+            <br/><h1>введите запрос</h1>
+            {{ form.request(class="form-control form-control-lg")}}
+            <br/>{{ form.submit(class="btn btn-dark") }}<br/><br/><br/></div>
+        <div class="shadow-sm p-3 mb-4 bg-body rounded">
+            <p class="fw-light">
+            варианты элементов запроса:
+            <br/>запрос - все вхождения слова в любой его форме
+            <br/>"запрос" - все вхождения слова в заданной форме
+            <br/>POS - все вхождения конкретной части речи
+            <br/>запрос+POS - все вхождения слова заданной части речи в любой его форме
+            <br/>"запрос"+POS - все вхождения слова заданной части речи в заданной форме
+            <br/><br/>максимальная длина запроса - 3 элемента
+            <br/><br/>список POS-тегов:<br/>
+            NOUN имя существительное<br/>
+            ADJF имя прилагательное (полное)<br/>
+            ADJS имя прилагательное (краткое)<br/>
+            COMP компаратив<br/>
+            VERB глагол (личная форма)<br/>
+            INFN глагол (инфинитив)<br/>
+            PRTF причастие (полное)<br/>
+            PRTS причастие (краткое)<br/>
+            GRND деепричастие<br/>
+            NUMR числительное<br/>
+            ADVB наречие<br/>
+            NPRO местоимение-существительное<br/>
+            PRED предикатив<br/>
+            PREP предлог<br/>
+            CONJ союз<br/>
+            PRCL частица<br/>
+            INTJ междометие
+            </p></div>
+    </form>
+</body>
+{% endblock %}

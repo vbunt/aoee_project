@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if req %}
+    <br/><h2>{{ req }}</h2>
+    <br/>Количество вхождений: {{ l }}<br/><br/>
+        {% for res in result[ind*20:ind*20+20] %}
+            <div>
+                {{ res[0] }}<br/>
+            </div>
+            <div >
+                {{ res[1] }}<br/>
+            </div>
+            <div>
+                Источник: {{ res[2] }} ({{ res[3] }})<br/><br/>
+            </div>
+        {% endfor %}
+    <nav>
+        {% if n_pages < 15 %}
+            <ul class="pagination justify-content-left">
+            {% for i in range(n_pages) %}
+                {% if i == ind %}
+                    <li class="page-item active"><a class="page-link" href="result?page={{ i+1 }}">{{ i + 1}}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="result?page={{ i+1 }}">{{ i + 1}}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="pagination justify-content-left">
+                {% if ind+1 > 2%}
+                    <li class="page-item"><a class="page-link" href="result?page={{ 1 }}">1</a></li>
+                {% endif %}
+
+                {% if ind+1 > 6 %}
+                <li class="page-item"><a class="page-link" href="result?page={{ ind-4 }}">{{ ind-4 }}</a></li>
+                {% endif %}
+
+                {% if ind+1 > 1 %}
+                <li class="page-item"><a class="page-link" href="result?page={{ ind }}">{{ ind }}</a></li>
+                {% endif %}
+
+                <li class="page-item active"><a class="page-link" href="result?page={{ ind+1 }}">{{ ind+1 }}</a></li>
+
+                {% if ind+1 < n_pages %}
+                <li class="page-item"><a class="page-link" href="result?page={{ ind+2 }}">{{ ind+2 }}</a></li>
+                {% endif %}
+
+                {% if ind+1 < n_pages-5 %}
+                <li class="page-item"><a class="page-link" href="result?page={{ ind+6 }}">{{ ind+6 }}</a></li>
+                {% endif %}
+
+                {% if ind+1 < n_pages-1 %}
+                    <li class="page-item"><a class="page-link" href="result?page={{ n_pages }}">{{ n_pages }}</a></li>
+                {% endif %}
+            </ul>
+
+        {% endif %}
+    </nav>
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-sm-2">
+                {{ p.hidden_tag() }}
+                {{ p.request_p(class="form-control form-control-sm") }}
+            </div>
+            <div class="col-sm-2">
+                {{ p.submit_p(class="btn btn-dark") }}
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+{% endblock %}
